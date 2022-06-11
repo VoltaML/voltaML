@@ -1,4 +1,4 @@
-### Hi there 👋
+#                                                                 VoltaML 👋
 
 **VoltaML** is a lightweight library to accelerate 🏎️ your machine learning and deep learning models. VoltaML can optimize, compile and deploy your models to your target CPU and GPU devices, with just **one line of code.**
 
