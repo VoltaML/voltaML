@@ -4,12 +4,13 @@
 
 VoltaML has compilation support for **Torchscript, ONNX, Apache TVM and NVIDIA TensorRT**
 
+
 <img width="1102" alt="Screenshot 2022-06-13 at 3 43 03 PM" src="https://user-images.githubusercontent.com/107309002/173331905-e7f506a8-f675-45ae-aff1-b84f65972f90.png">
 
-**VoltaML Compiler**
 
-![Snap(3)](https://user-images.githubusercontent.com/107309002/173325658-6965c6f3-dd19-49b6-817b-ff4b416d842c.png)
-
+<p align="center">
+  <img width="640" height="440" src="https://user-images.githubusercontent.com/107309002/173332614-68abe0b3-e66e-4f5d-93fe-7c1362f67e31.png">
+</p>
 
 # Benchmarks
 
