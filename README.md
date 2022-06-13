@@ -1,8 +1,8 @@
 #                                                                 VoltaML 👋
 
-**VoltaML** is a lightweight library to accelerate 🏎️ your machine learning and deep learning models. VoltaML can optimize, compile and deploy your models to your target CPU and GPU devices, with just **one line of code.**
+**VoltaML** is a lightweight library to accelerate 🏎️ your machine learning and deep learning models. VoltaML can optimize, compile and deploy your models to your target CPU and GPU devices, with just ***one line of code.***
 
-VoltaML has compilation support for **Torchscript, ONNX, Apache TVM and NVIDIA TensorRT**
+VoltaML has compilation support for the following:
 
 
 <img width="1102" alt="Screenshot 2022-06-13 at 3 43 03 PM" src="https://user-images.githubusercontent.com/107309002/173331905-e7f506a8-f675-45ae-aff1-b84f65972f90.png">
