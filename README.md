@@ -4,6 +4,8 @@
 
 VoltaML has compilation support for **Torchscript, ONNX, Apache TVM and NVIDIA TensorRT**
 
+<img width="1102" alt="Screenshot 2022-06-13 at 3 43 03 PM" src="https://user-images.githubusercontent.com/107309002/173331905-e7f506a8-f675-45ae-aff1-b84f65972f90.png">
+
 **VoltaML Compiler**
 
 ![Snap(3)](https://user-images.githubusercontent.com/107309002/173325658-6965c6f3-dd19-49b6-817b-ff4b416d842c.png)
@@ -24,5 +26,5 @@ Classification has been done on Imagenet data, `batch size = 1` on NVIDIA RTX 20
 | `densenet169`   |         22.0 |                4.4 |                3.8 |         6x |
 | `densenet201`   |         26.8 |                6.3 |                5.0 |         5x |
 | `vgg11`         |          2.0 |                0.9 |                0.5 |         4x |
-| `vgg16`         |              |                    |                    |            |
-| `vgg19`         |              |                    |                    |            |
+| `vgg16`         |          3.5 |                1.2 |                0.7 |         5x |
+| `vgg19`         |          4.0 |                1.3 |                0.8 |         5x |
