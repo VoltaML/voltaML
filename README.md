@@ -12,9 +12,8 @@ VoltaML has compilation support for the following:
   <img width="640" height="440" src="https://user-images.githubusercontent.com/107309002/173332614-68abe0b3-e66e-4f5d-93fe-7c1362f67e31.png">
 </p>
 
-# Benchmarks
-
-## Classification Models Inference Latency
+## Benchmarks
+### Classification Models Inference Latency
 Classification has been done on Imagenet data, `batch size = 1` on NVIDIA RTX 2080Ti
 |     Model     | Pytorch (ms) | VoltaGPU FP16 (ms) | VoltaGPU Int8 (ms) | Speed Gain |
 |:-------------:|:------------:|:------------------:|:--------------------:|:------------:|
