@@ -7,6 +7,19 @@ VoltaML has compilation support for the following:
 
 <img width="1102" alt="Screenshot 2022-06-13 at 3 43 03 PM" src="https://user-images.githubusercontent.com/107309002/173331905-e7f506a8-f675-45ae-aff1-b84f65972f90.png">
 
+## Installation
+
+### Installation can be done via:
+
+### Docker Container 🐳
+
+`$ docker pull voltaml`
+
+### Connect to our server 🔌
+
+If you are unable to use docker, you can connect to our server, send your models via an API service as below:
+
+`sign in`
 
 <p align="center">
   <img width="640" height="440" src="https://user-images.githubusercontent.com/107309002/173332614-68abe0b3-e66e-4f5d-93fe-7c1362f67e31.png">
