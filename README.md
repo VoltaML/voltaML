@@ -13,7 +13,7 @@ VoltaML has compilation support for the following:
 </p>
 
 ## Benchmarks
-### Classification Models Inference Latency - GPU
+### Classification Models Inference Latency (on GPU) ⏱️
 Classification has been done on Imagenet data, `batch size = 1` on NVIDIA RTX 2080Ti. In terms of top 1% and 5% accuracy for `int8` models, we have not seen an accuracy drop of more than 1%. 
 |     Model     | Pytorch Vanilla (ms) | VoltaGPU `FP16` (ms) | VoltaGPU `Int8` (ms) | Speed Gain |
 |:-------------:|:------------:|:------------------:|:--------------------:|:------------:|
@@ -28,3 +28,11 @@ Classification has been done on Imagenet data, `batch size = 1` on NVIDIA RTX 20
 | `vgg11`         |          2.0 |                0.9 |                0.5 |         4x |
 | `vgg16`         |          3.5 |                1.2 |                0.7 |         5x |
 | `vgg19`         |          4.0 |                1.3 |                0.8 |         5x |
+
+### Enterpise Roadmap 🛣️
+- [ ] Hardware targeted optimised dockers for maximum performance.
+- [ ] One-click deployment of the compiled models.
+- [ ] Integration of inference engine for continuous optimisation. 
+- [ ] Cost-benefit analysis dashboard for different VM's.
+- [ ] NVIDIA Triton optimzed dockers for large-scale GPU deployment.
+- [ ] Quantization-Aware-Training (QAT) 
