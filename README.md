@@ -46,6 +46,6 @@ Classification has been done on Imagenet data, `batch size = 1` on NVIDIA RTX 20
 - [ ] Hardware targeted optimised dockers for maximum performance.
 - [ ] One-click deployment of the compiled models.
 - [ ] Integration of inference engine for continuous optimisation. 
-- [ ] Cost-benefit analysis dashboard for different VM's.
+- [ ] Cost-benefit analysis dashboard for optimal deployment.
 - [ ] NVIDIA Triton optimzed dockers for large-scale GPU deployment.
 - [ ] Quantization-Aware-Training (QAT) 
