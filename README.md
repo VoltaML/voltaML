@@ -42,10 +42,9 @@ Classification has been done on Imagenet data, `batch size = 1` on NVIDIA RTX 20
 | `vgg16`         |          3.5 |                1.2 |                0.7 |         5x |
 | `vgg19`         |          4.0 |                1.3 |                0.8 |         5x |
 
-### Enterpise Roadmap 🛣️
-- [ ] Hardware targeted optimised dockers for maximum performance.
-- [ ] One-click deployment of the compiled models.
-- [ ] Integration of inference engine for continuous optimisation. 
+### Enterpise Platform 🛣️
+- [x] Hardware targeted optimised dockers for maximum performance.
+- [ ] One-click deployment of the compiled models. 
 - [ ] Cost-benefit analysis dashboard for optimal deployment.
 - [ ] NVIDIA Triton optimzed dockers for large-scale GPU deployment.
 - [ ] Quantization-Aware-Training (QAT) 
