@@ -9,3 +9,7 @@ tornado
 psutil
 xgboost 
 cloudpickle
+onnx
+onnxoptimizer
+tqdm
+time
