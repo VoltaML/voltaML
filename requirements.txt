@@ -1,0 +1,11 @@
+numpy
+scipy
+pillow
+torch
+torchvision
+decorator 
+attrs
+tornado
+psutil
+xgboost 
+cloudpickle
