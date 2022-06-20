@@ -25,6 +25,81 @@ If you are unable to use docker, you can connect to our server, send your models
   <img width="640" height="440" src="https://user-images.githubusercontent.com/107309002/173332614-68abe0b3-e66e-4f5d-93fe-7c1362f67e31.png">
 </p>
 
+## Usage
+
+Using `VoltaCPUCompiler`:
+
+```python
+import torch
+from voltaml.compile import VoltaCPUCompiler
+from voltaml.inference import cpu_performance
+
+model = torch.load("path/to/model/dir")
+
+# compile the model by giving paths
+compiler = VoltaCPUCompiler(
+        model=model,
+        output_dir="destination/path/of/compiled/model",
+        input_shape=(1, 3, 224, 224) # example input shape
+    )
+
+# returns the compiled model
+compiled_model = compiler.compile()
+
+# compute and compare performance
+cpu_performance(compiled_model, model, compiler="voltaml", input_shape=(1, 3, 224, 224))
+```
+
+Using `VoltaGPUCompiler`:
+
+
+```python
+import torch
+from voltaml.compile import VoltaGPUCompiler
+from voltaml.inference import gpu_performance
+
+model = torch.load("path/to/model/dir")
+
+# compile the model by giving paths
+compiler = VoltaGPUCompiler(
+        model=model,
+        output_dir="destination/path/of/compiled/model",
+        input_shape=(1, 3, 224, 224) # example input shape
+        precision="fp16" # specify precision, one of [fp32, fp16, int8]
+    )
+
+# returns the compiled model
+compiled_model = compiler.compile()
+
+# compute and compare performance
+gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224))
+```
+
+Using `TVMCompiler`: 
+
+```python
+import torch
+from voltaml.compile import TVMCompiler
+from voltaml.inference import cpu_performance
+
+model = torch.load("path/to/model/dir")
+
+# compile the model by giving paths
+compiler = TVMCompiler(
+        model=model,
+        output_dir="destination/path/of/compiled/model",
+        input_shape=(1, 3, 224, 224) # example input shape
+        target="llvm" # specify target device
+    )
+
+# returns the compiled model
+compiled_model = compiler.compile()
+
+# compute and compare performance
+cpu_performance(compiled_model, model, compiler="tvm", input_shape=(1, 3, 224, 224))
+```
+
+
 ## Benchmarks
 ### Classification Models Inference Latency (on GPU) ⏱️
 Classification has been done on Imagenet data, `batch size = 1` on NVIDIA RTX 2080Ti. In terms of top 1% and 5% accuracy for `int8` models, we have not seen an accuracy drop of more than 1%. 
