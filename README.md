@@ -1,9 +1,10 @@
 <p align="center">
-  <img width="650" height="120" src="https://user-images.githubusercontent.com/107309002/174966257-9ae976c0-6892-4f6b-a5bc-4f26731e249c.jpg">
+  <img width="650" height="120" src="https://user-images.githubusercontent.com/107309002/174967880-33a3e4ab-589b-40cb-8185-a0ab1ce29d61.jpg">
 </p>
 <p align="center">
   <b> Accelerate your machine learning and deep learning models by upto 15X </b> 
 </p>
+
 <hr style="border:2px solid gray">
 
 **voltaML** is an open-source lightweight library to accelerate 🏎️ your machine learning and deep learning models. VoltaML can optimize, compile and deploy your models to your target CPU and GPU devices, with just ***one line of code.***
