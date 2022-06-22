@@ -1,5 +1,4 @@
-
-![vml4](https://user-images.githubusercontent.com/107309002/175024812-fd83ceb5-8310-4d1c-8c25-d77c184f59e1.jpg)
+![lg3v3](https://user-images.githubusercontent.com/107309002/175033667-a58dab6e-ca8f-4739-a371-10a10b51e7e9.jpg)
 
 <p align="center">
   <b> Accelerate your machine learning and deep learning models by upto 15X </b> 
