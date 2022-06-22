@@ -10,10 +10,18 @@
 
 **voltaML** is an open-source lightweight library to accelerate 🏎️ your machine learning and deep learning models. VoltaML can optimize, compile and deploy your models to your target CPU and GPU devices, with just ***one line of code.***
 
+#### Out of the box support for 
+
+:white_check_mark: Operator fusions<br/>
+:white_check_mark: FP16 Quantization<br/>
+:white_check_mark: Int8 Quantization
+
+
 VoltaML has compilation support for the following:
 
 
 <img width="1102" alt="Screenshot 2022-06-13 at 3 43 03 PM" src="https://user-images.githubusercontent.com/107309002/173331905-e7f506a8-f675-45ae-aff1-b84f65972f90.png">
+
 
 ## Installation
 
