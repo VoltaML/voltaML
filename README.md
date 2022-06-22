@@ -42,7 +42,7 @@ If you are unable to use docker, you can connect to our server, send your models
 
 ## Usage
 
-Using `VoltaCPUCompiler`:
+Using **`VoltaCPUCompiler`**:
 
 ```python
 import torch
@@ -65,7 +65,7 @@ compiled_model = compiler.compile()
 cpu_performance(compiled_model, model, compiler="voltaml", input_shape=(1, 3, 224, 224))
 ```
 
-Using `VoltaGPUCompiler`:
+Using **`VoltaGPUCompiler`**:
 
 
 ```python
@@ -90,7 +90,7 @@ compiled_model = compiler.compile()
 gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224))
 ```
 
-Using `TVMCompiler`: 
+Using **`TVMCompiler`**: 
 
 ```python
 import torch
