@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="650" height="120" src="https://user-images.githubusercontent.com/107309002/174967880-33a3e4ab-589b-40cb-8185-a0ab1ce29d61.jpg">
+  <img width="500" height="90" src="https://user-images.githubusercontent.com/107309002/174967880-33a3e4ab-589b-40cb-8185-a0ab1ce29d61.jpg">
 </p>
 <p align="center">
   <b> Accelerate your machine learning and deep learning models by upto 15X </b> 
