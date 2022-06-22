@@ -1,6 +1,5 @@
-<p align="center">
-  <img width="480" height="90" src="https://user-images.githubusercontent.com/107309002/174967880-33a3e4ab-589b-40cb-8185-a0ab1ce29d61.jpg">
-</p>
+![vml2](https://user-images.githubusercontent.com/107309002/175024114-87c0fd3f-70dd-4135-8192-8d9618684e18.jpg)
+
 <p align="center">
   <b> Accelerate your machine learning and deep learning models by upto 15X </b> 
 </p>
