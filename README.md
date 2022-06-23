@@ -78,7 +78,7 @@ model = torch.load("path/to/model/dir")
 compiler = VoltaGPUCompiler(
         model=model,
         output_dir="destination/path/of/compiled/model",
-        input_shape=(1, 3, 224, 224) # example input shape
+        input_shape=(1, 3, 224, 224), # example input shape
         precision="fp16" # specify precision, one of [fp32, fp16, int8]
     )
 
@@ -102,7 +102,7 @@ model = torch.load("path/to/model/dir")
 compiler = TVMCompiler(
         model=model,
         output_dir="destination/path/of/compiled/model",
-        input_shape=(1, 3, 224, 224) # example input shape
+        input_shape=(1, 3, 224, 224), # example input shape
         target="llvm" # specify target device
     )
 
