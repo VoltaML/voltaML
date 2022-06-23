@@ -9,7 +9,6 @@ from tqdm import tqdm
 from tqdm import trange
 
 from voltaml.preprocess import preprocess_image
-# from voltaml.compile import VoltaCPUCompiler, TVMCompiler
 from scipy.special import softmax
 import tensorrt as trt
 
@@ -97,10 +96,10 @@ def cpu_performance(compiled_model, torch_model, compiler="voltaml", input_shape
     elif compiler == "tvm":
 
         tvm_latency = measure_tvm_inference_latency(compiled_model, input_size=input_shape)
-        torch_latency = measure_cpu_inference_latency(torch_model, input_size=input_shape, device=device)
+        torch_latency = measure_cpu_inference_latency(torch_model, input_size=input_shape)
 
         tvm_throughput = measure_tvm_inference_throughput(compiled_model, input_size=input_shape_for_throughput)
-        torch_throughput = measure_cpu_inference_throughput(torch_model, input_size=input_shape_for_throughput, device=device)
+        torch_throughput = measure_cpu_inference_throughput(torch_model, input_size=input_shape_for_throughput)
 
         print("Latency:")
         print("-"*50)
@@ -126,7 +125,7 @@ def gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224), through
     voltaml_gpu_latency = measure_gpu_inference_latency(gpu_inference_model, input_size=input_shape, model_type="voltaml")
 
     torch_throughput = measure_gpu_inference_throughput(model, input_size=input_shape_for_throughput, model_type="torch")
-    voltaml_gpu_throughput = measure_gpu_inference_throughput(compiled_model, input_size=input_shape_for_throughput, model_type="voltaml")
+    voltaml_gpu_throughput = measure_gpu_inference_throughput(gpu_inference_model, input_size=input_shape_for_throughput, model_type="voltaml")
     
     print("Latency:")
     print("-"*50)
@@ -253,14 +252,16 @@ def measure_gpu_inference_latency(model,
             times = []
 
             with torch.no_grad():
+                start_time = time.time()
                 for i in range(num_samples):
-                    start = time.time()
+                    
                     model.infer(batch)
                     torch.cuda.synchronize()
-                    end_time = time.time()
-                    times.append(end_time - start)
-
-            elapsed_time_ave = 1000*np.average(times)
+                end_time = time.time()
+#                     times.append(end_time - start)
+            elapsed_time = end_time - start_time  
+#             elapsed_time_ave = 1000*np.average(times)
+            elapsed_time_ave = elapsed_time / num_samples
         return elapsed_time_ave
     
     else:
@@ -337,46 +338,56 @@ def measure_cpu_inference_throughput(model, input_size=(64, 3, 224, 224), repeti
 #     throughput = (repetitions*input_size[0])/total_time
 #     return throughput
 
-def measure_gpu_inference_throughput(model, input_size=(1, 3, 224, 224), repetitions=1000, model_type="torch"):
-    
+def measure_gpu_inference_throughput(model, input_size=(1, 3, 224, 224), repetitions=100, model_type="torch"):
     if model_type == "torch":
-        dummy_input = np.random.rand(*input_size)
+        model = model.to("cuda:0")
+        model.eval()
+        dummy_input = torch.rand(*input_size).to("cuda:0")
 
         t = trange(repetitions, desc="calculating throughput: ") 
 
-        total_time = 0
+        times = []
+#         total_time = 0
             # for rep in tqdm(range(repetitions), desc="calculating throughput..."):
-        for rep in t:
-            # starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
-            # starter.record()
-            start_time = time.time()
-            _ = model.predict(dummy_input)
-            end_time = time.time()
-            elapsed_time = end_time - start_time
-            elapsed_time = elapsed_time #/ 1000
-            total_time += elapsed_time
+        with torch.no_grad():
+            for rep in t:
+                # starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+                # starter.record()
+                start_time = time.time()
+                _ = model(dummy_input)
+                torch.cuda.synchronize()
+                end_time = time.time()
+                times.append(end_time - start_time)
+                
+#                 elapsed_time = end_time - start_time
+#                 elapsed_time = elapsed_time #/ 1000
+#                 total_time += elapsed_time
                 # t.set_description(f"calculating throughput elapsed time: {curr_time}")
-        throughput = (repetitions*input_size[0])/total_time
+        throughput = input_size[0] / np.average(times)
+#         throughput = (repetitions*input_size[0])/total_time
         return throughput
     elif model_type == "voltaml":
 
         dummy_input = np.random.rand(*input_size)
 
-        spec = model.input_spec()
+#         spec = model.input_spec()
         batch = input_size
         times = []
-
+#         total_time = 0
         for i in range(repetitions):  # GPU warmup iterations
             model.infer(batch)
         with torch.no_grad():
             for i in range(repetitions):
-                start = time.time()
+                start_time = time.time()
                 model.infer(batch)
                 torch.cuda.synchronize()
                 end_time = time.time()
-                times.append(end_time - start)
+                times.append(end_time - start_time)
+#                 elapsed_time = end_time - start_time
+#                 total_time += elapsed_time
 
         throughput = model.batch_size / np.average(times)
+#         throughput = (repetitions*input_size[0])/total_time
         return throughput
     else:
         raise ValueError("model_type should be one of torch and voltaml")
