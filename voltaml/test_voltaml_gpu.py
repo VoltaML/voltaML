@@ -22,7 +22,7 @@ def main():
 
     compiled_model = compiler.compile()
 
-    gpu_performance(compiled_model, model, input_shape=args.input_shape, throughput_batch_size=args.throughput_batch_size)
+    gpu_performance(args.compiled_model_dir, model, input_shape=args.input_shape, throughput_batch_size=args.throughput_batch_size)
 
 def get_args():
     parser = ArgumentParser()
