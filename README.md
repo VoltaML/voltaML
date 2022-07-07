@@ -12,7 +12,7 @@
 
 :white_check_mark: Operator fusions<br/>
 :white_check_mark: FP16 Quantization<br/>
-:white_check_mark: Int8 Quantization
+:white_check_mark: Int8 Quantization*
 
 
 VoltaML has compilation support for the following:
