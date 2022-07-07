@@ -15,6 +15,9 @@ import tensorrt as trt
 import pycuda.driver as cuda
 import pycuda.autoinit
 from voltaml.trt_infer import TensorRTInfer
+from voltaml.models.common import DetectMultiBackend
+from voltaml.utils.torch_utils import select_device
+from voltaml.detect import run
 
 def run_compiled_model(module, img_data):
     dtype = "float32"
@@ -61,6 +64,12 @@ def return_performance_data(model, input_shape, compiled=True):
     }
 
     print(time_taken)
+    
+def time_sync():
+    # PyTorch-accurate time
+    if torch.cuda.is_available():
+        torch.cuda.synchronize()
+    return time.time()
 
 def process_image(img_data):
     image = torch.tensor(img_data).float()
@@ -114,28 +123,66 @@ def cpu_performance(compiled_model, torch_model, compiler="voltaml", input_shape
     else:
         raise NotImplementedError(f"{compiler} compiler not implemented")
 
-def gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224), throughput_batch_size=64):
+def gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224), throughput_batch_size=64, is_yolo=True):
 
     input_shape_for_throughput = list(input_shape)
     input_shape_for_throughput[0] = throughput_batch_size
-
-    gpu_inference_model = TensorRTInfer(compiled_model)
-
-    torch_latency = measure_gpu_inference_latency(model, input_size=input_shape, model_type="torch")
-    voltaml_gpu_latency = measure_gpu_inference_latency(gpu_inference_model, input_size=input_shape, model_type="voltaml")
-
-    torch_throughput = measure_gpu_inference_throughput(model, input_size=input_shape_for_throughput, model_type="torch")
-    voltaml_gpu_throughput = measure_gpu_inference_throughput(gpu_inference_model, input_size=input_shape_for_throughput, model_type="voltaml")
     
-    print("Latency:")
-    print("-"*50)
-    print("VoltaML GPU Inference Latency: {:.2f} ms / sample".format(voltaml_gpu_latency * 1000))
-    print("PyTorch Inference Latency: {:.2f} ms / sample".format(torch_latency * 1000))
-    print("\n")
-    print("Throughput:")
-    print("-"*50)
-    print("VoltaML GPU Inference Throughput: {:.2f} samples / s".format(voltaml_gpu_throughput))
-    print("PyTorch Inference Throughput: {:.2f} samples / s".format(torch_throughput))
+    if not is_yolo:
+        gpu_inference_model = TensorRTInfer(compiled_model)
+        torch_latency = measure_gpu_inference_latency(model, input_size=input_shape, model_type="torch")
+        voltaml_gpu_latency = measure_gpu_inference_latency(gpu_inference_model, input_size=input_shape, model_type="voltaml")
+
+        torch_throughput = measure_gpu_inference_throughput(model, input_size=input_shape_for_throughput, model_type="torch")
+        voltaml_gpu_throughput = measure_gpu_inference_throughput(gpu_inference_model, input_size=input_shape_for_throughput, model_type="voltaml")
+
+        print("Latency:")
+        print("-"*50)
+        print("VoltaML GPU Inference Latency: {:.2f} ms / sample".format(voltaml_gpu_latency * 1000))
+        print("PyTorch Inference Latency: {:.2f} ms / sample".format(torch_latency * 1000))
+        print("\n")
+        print("Throughput:")
+        print("-"*50)
+        print("VoltaML GPU Inference Throughput: {:.2f} samples / s".format(voltaml_gpu_throughput))
+        print("PyTorch Inference Throughput: {:.2f} samples / s".format(torch_throughput))
+
+    else:
+        t = run(weights=compiled_model)
+        torch_latency = measure_gpu_inference_latency(model, input_size=input_shape, model_type="torch")
+        voltaml_gpu_latency = t[1]
+        torch_fps = 1 / (torch_latency)
+        voltaml_gpu_fps = 1 / (voltaml_gpu_latency / 1000)
+        
+        print("Latency:")
+        print("-"*50)
+        print("VoltaML GPU Inference Latency: {:.2f} ms / sample".format(voltaml_gpu_latency))
+        print("PyTorch Inference Latency: {:.2f} ms / sample".format(torch_latency * 1000))
+        
+        print("\n")
+        print("FPS:")
+        print("-"*50)
+        print("VoltaML GPU Inference Throughput: {:.2f} fps".format(voltaml_gpu_fps))
+        print("PyTorch Inference Throughput: {:.2f} fps".format(torch_fps))
+        
+        
+        # gpu_inference_model = DetectMultiBackend(compiled_model, device=select_device('0'), dnn=False, data='/workspace/yolov5/data/coco128.yaml', fp16=False)
+        
+
+#     torch_latency = measure_gpu_inference_latency(model, input_size=input_shape, model_type="torch")
+#     voltaml_gpu_latency = measure_gpu_inference_latency(gpu_inference_model, input_size=input_shape, model_type="voltaml")
+
+#     torch_throughput = measure_gpu_inference_throughput(model, input_size=input_shape_for_throughput, model_type="torch")
+#     voltaml_gpu_throughput = measure_gpu_inference_throughput(gpu_inference_model, input_size=input_shape_for_throughput, model_type="voltaml")
+    
+#     print("Latency:")
+#     print("-"*50)
+#     print("VoltaML GPU Inference Latency: {:.2f} ms / sample".format(voltaml_gpu_latency * 1000))
+#     print("PyTorch Inference Latency: {:.2f} ms / sample".format(torch_latency * 1000))
+#     print("\n")
+#     print("Throughput:")
+#     print("-"*50)
+#     print("VoltaML GPU Inference Throughput: {:.2f} samples / s".format(voltaml_gpu_throughput))
+#     print("PyTorch Inference Throughput: {:.2f} samples / s".format(torch_throughput))
 
 
 class GPUInference:
@@ -219,9 +266,10 @@ def measure_cpu_inference_latency(model,
 #     return elapsed_time_ave
 
 def measure_gpu_inference_latency(model,
-                              input_size=(1,3,224,224), num_samples=1000, num_warmups=100, model_type="torch"):
+                              input_size=(1,3,224,224), num_samples=1000, num_warmups=100, model_type="torch", is_yolo=False):
 
     if model_type == "torch":
+        
         model = model.to("cuda:0")
         model.eval()
 
@@ -245,24 +293,48 @@ def measure_gpu_inference_latency(model,
         return elapsed_time_ave
 
     elif model_type == "voltaml":
+        if is_yolo:
+            for i in range(2): 
+                # spec = model.input_spec()
+                batch = torch.rand(*input_size)
+                # x = torch.rand(size=input_size)
 
-        for i in range(2): 
-            # spec = model.input_spec()
-            batch = input_size
-            times = []
+                times = 0
 
-            with torch.no_grad():
-                start_time = time.time()
-                for i in range(num_samples):
+                with torch.no_grad():
                     
-                    model.infer(batch)
-                    torch.cuda.synchronize()
-                end_time = time.time()
-#                     times.append(end_time - start)
-            elapsed_time = end_time - start_time  
-#             elapsed_time_ave = 1000*np.average(times)
-            elapsed_time_ave = elapsed_time / num_samples
-        return elapsed_time_ave
+                    for i in range(num_samples):
+                        start_time = time_sync()
+                        model(batch)
+                        # torch.cuda.synchronize()
+                        end_time = time_sync()
+    #                     times.append(end_time - start)
+                        elapsed_time = end_time - start_time  
+                        times += elapsed_time
+    #             elapsed_time_ave = 1000*np.average(times)
+                elapsed_time_ave = elapsed_time / num_samples * 1E3
+            return elapsed_time_ave    
+        else:   
+
+            for i in range(2): 
+                # spec = model.input_spec()
+                batch = np.random.rand(*input_size)
+                # x = torch.rand(size=input_size)
+
+                times = []
+
+                with torch.no_grad():
+                    start_time = time.time()
+                    for i in range(num_samples):
+
+                        model.infer(batch)
+                        torch.cuda.synchronize()
+                    end_time = time.time()
+    #                     times.append(end_time - start)
+                elapsed_time = end_time - start_time  
+    #             elapsed_time_ave = 1000*np.average(times)
+                elapsed_time_ave = elapsed_time / num_samples
+            return elapsed_time_ave
     
     else:
         raise ValueError("model_type should be one of torch and voltaml")

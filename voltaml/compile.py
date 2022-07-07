@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore")
 import os
 from PIL import Image
 import numpy as np
@@ -228,37 +230,21 @@ class VoltaCPUCompiler:
         
         return model_jit
 
-# class VoltaGPUCompiler:
-
-#     def __init__(self, model, output_dir, input_shape, precision, save=True) -> None:
-#         model = model.eval()
-#         model = model.to(torch.device("cpu:0"))
-#         self.model = model
-#         self.output_dir = output_dir
-#         self.input_shape = input_shape
-#         self.precision = precision
-#         self.save = save
-
-#     def compile(self):
-#         dummy_input = torch.rand(*self.input_shape)
-#         torch.onnx.export(self.model, dummy_input, "tmp.onnx", verbose=True)
-#         command = f"trtexec --onnx=tmp.onnx --saveEngine={self.output_dir} --buildOnly --{self.precision} --verbose=false"
-#         subprocess.run(command, shell=True, check=True)
-#         os.remove("tmp.onnx")
-#         context = self.load_engine()
-#         return context
-
-#     def load_engine(self):
-#         f = open(self.output_dir, "rb")
-#         runtime = trt.Runtime(trt.Logger(trt.Logger.WARNING)) 
-
-#         engine = runtime.deserialize_cuda_engine(f.read())
-#         context = engine.create_execution_context()
-#         return context
 
 class VoltaGPUCompiler:
 
-    def __init__(self, model, output_dir, input_shape, precision, calib_input='/workspace/TensorRT/ILSVRC2012_img_val/', calib_cache='./calibration.cache', calib_num_images=25000, calib_batch_size=8, calib_preprocessor='V2', save=True) -> None:
+    def __init__(self, model, output_dir, 
+                 input_shape, precision,
+                 input_name='',
+                 output_name='',
+                 dynamic=False,
+                 simplify=False,
+                 opset_version=13,
+                 calib_input='/workspace/TensorRT/ILSVRC2012_img_val/', 
+                 calib_cache='./calibration.cache', calib_num_images=25000, 
+                 calib_batch_size=8, 
+                 calib_preprocessor='V2', save=True) -> None:
+        
         model = model.eval()
         model = model.to(torch.device("cpu:0"))
         self.model = model
@@ -271,10 +257,48 @@ class VoltaGPUCompiler:
         self.calib_num_images = calib_num_images
         self.calib_batch_size = calib_batch_size
         self.calib_preprocessor = calib_preprocessor
+        self.input_name = input_name
+        self.output_name = output_name
+        self.dynamic = dynamic
+        self.simplify = simplify
+        self.opset_version = opset_version
 
     def compile(self):
         dummy_input = torch.rand(*self.input_shape)
-        torch.onnx.export(self.model, dummy_input, "tmp.onnx", verbose=True)
+
+        torch.onnx.export(self.model, dummy_input, "tmp.onnx", verbose=False,
+                          input_names=[self.input_name],
+                          output_names=[self.output_name],
+                          opset_version=self.opset_version,
+                          dynamic_axes={
+                                            'images': {
+                                                0: 'batch',
+                                                2: 'height',
+                                                3: 'width'},  # shape(1,3,640,640)
+                                            'output': {
+                                                0: 'batch',
+                                                1: 'anchors'}  # shape(1,25200,85)
+                                        } if self.dynamic else None
+                         )
+        # Simplify
+        if self.simplify:
+            try:
+                import onnxsim
+                f = 'tmp.onnx'
+                print('-------- Loading ONNX ---------------')
+                # Checks
+                model_onnx = onnx.load(f)  # load onnx model
+                onnx.checker.check_model(model_onnx)  # check onnx model
+                # LOGGER.info(f'{prefix} simplifying with onnx-simplifier {onnxsim.__version__}...')
+                model_onnx, check = onnxsim.simplify(f,
+                                                     dynamic_input_shape=self.dynamic,
+                                                     input_shapes={'images': list((640,640),(1280,1280))} if self.dynamic else None)
+                assert check, 'assert check failed'
+                onnx.save(model_onnx, f)
+            except Exception as e:
+                print(e)
+                pass
+                # LOGGER.info(f'{prefix} simplifier failure: {e}')
         
         builder = EngineBuilder(verbose=False)
         builder.create_network("tmp.onnx")
@@ -283,10 +307,10 @@ class VoltaGPUCompiler:
                           self.calib_batch_size, self.calib_preprocessor)
         else:
             builder.create_engine(self.output_dir, self.precision)        
-        # command = f"trtexec --onnx=tmp.onnx --saveEngine={self.output_dir} --buildOnly --{self.precision} --verbose=false"
-        # subprocess.run(command, shell=True, check=True)
+        
         os.remove("tmp.onnx")
-        os.remove('./calibration.cache')
+        if os.path.exists('./calibration.cache'):
+            os.remove('./calibration.cache')
         context = self.load_engine()
         return context
 
