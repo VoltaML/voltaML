@@ -10,9 +10,12 @@
 
 #### Out of the box support for 
 
-:white_check_mark: Operator fusions<br/>
-:white_check_mark: FP16 Quantization<br/>
-:white_check_mark: Int8 Quantization*
+
+✅ FP16 Quantization<br/>
+
+✅ Int8 Quantization*<br/>
+
+✅ Hardware specific compilation
 
 
 VoltaML has compilation support for the following:
