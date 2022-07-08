@@ -123,7 +123,7 @@ def cpu_performance(compiled_model, torch_model, compiler="voltaml", input_shape
     else:
         raise NotImplementedError(f"{compiler} compiler not implemented")
 
-def gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224), throughput_batch_size=64, is_yolo=True):
+def gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224), throughput_batch_size=64, is_yolo=False):
 
     input_shape_for_throughput = list(input_shape)
     input_shape_for_throughput[0] = throughput_batch_size
