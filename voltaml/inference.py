@@ -318,15 +318,14 @@ def measure_gpu_inference_latency(model,
 
             for i in range(2): 
                 # spec = model.input_spec()
-                batch = np.random.rand(*input_size)
-                # x = torch.rand(size=input_size)
+                # batch = np.random.rand(*input_size)
+                batch = torch.rand(*input_size)
 
                 times = []
 
                 with torch.no_grad():
                     start_time = time.time()
                     for i in range(num_samples):
-
                         model.infer(batch)
                         torch.cuda.synchronize()
                     end_time = time.time()
