@@ -125,8 +125,8 @@ Classification has been done on Imagenet data, `batch size = 1` on NVIDIA RTX 20
 | `squeezenet1_1` |          2.5 |                0.2 |                0.2 |        13x |
 | `resnet18`      |          2.7 |                0.4 |                0.3 |         9x |
 | `resnet34`      |          4.5 |                0.7 |                0.5 |         9x |
-| `resnet50`      |          6.6 |                0.7 |                0.5 |        13x |
-| `resnet101`     |         13.6 |                1.3 |                1.0 |        14x |
+| `resnet50`      |          4.8 |                0.7 |                0.5 |        13x |
+| `resnet101`     |          8.8 |                1.4 |                1.0 |        14x |
 | `densenet121`   |         15.7 |                2.4 |                2.0 |         8x |
 | `densenet169`   |         22.0 |                4.4 |                3.8 |         6x |
 | `densenet201`   |         26.8 |                6.3 |                5.0 |         5x |
