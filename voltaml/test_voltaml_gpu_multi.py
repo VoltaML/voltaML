@@ -9,9 +9,7 @@ import torch
 from voltaml.compile import VoltaGPUCompiler
 from voltaml.inference import gpu_performance
 from voltaml.utils.torch_utils import select_device, time_sync
-
-from voltaml.yolov6.utils.checkpoint import load_checkpoint
-from voltaml.yolov6.layers.common import DetectBackend
+import segmentation_models_pytorch as smp
 
 def main():
     args = get_args()
@@ -21,23 +19,25 @@ def main():
     # model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
 
 
-    # if args.is_yolo:
-    #     device = select_device('0')
-    #     model = DetectMultiBackend(args.torch_model_dir, device=device)
-    # else:
-    #     model = torch.load(args.torch_model_dir)
-    # Download a pretrained model
-    torch.hub.download_url_to_file('https://github.com/meituan/YOLOv6/releases/download/0.2.0/yolov6l.pt', 'yolov6l.pt')
-    torch_model_dir = 'yolov6l.pt'
-    device = torch.device(0)
-    model = load_checkpoint(torch_model_dir, map_location=device, inplace=True, fuse=False)  # load FP32 model
+#     if args.is_yolo:
+#         device = select_device('0')
+#         model = DetectMultiBackend(args.torch_model_dir, device=device)
+#     else:
+#         model = torch.load(args.torch_model_dir)
+
     # download or load the model from disk
     # model = torchvision.models.detection.retinanet_resnet50_fpn(pretrained=True)
     # weights = torchvision.models.detection.MaskRCNN_ResNet50_FPN_V2_Weights.DEFAULT
     # model = torchvision.models.detection.maskrcnn_resnet50_fpn_v2(pretrained=True)
-    model.eval()
-    
-    # model = torch.hub.load('pytorch/vision:v0.10.0', 'deeplabv3_resnet50', pretrained=True)
+    # model.eval()
+    # model = torchvision.models.vgg11(pretrained=True)
+    # model = torch.hub.load('pytorch/vision:v0.10.0', 'deeplabv3_resnet101', pretrained=True)
+    model = smp.DeepLabV3Plus(
+            encoder_name="resnet50",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
+            encoder_weights="imagenet",     # use `imagenet` pre-trained weights for encoder initialization
+            in_channels=3,                  # model input channels (1 for gray-scale images, 3 for RGB, etc.)
+            classes=1,                      # model output channels (number of classes in your dataset)
+        )
 
     compiler = VoltaGPUCompiler(
         model=model,
@@ -62,15 +62,15 @@ def main():
 
 def get_args():
     parser = ArgumentParser()
-    parser.add_argument("--torch_model_dir", default="/workspace/voltaML/voltaml/yolov6l.pt", type=str)
-    parser.add_argument("--compiled_model_dir", default="/workspace/voltaML/voltaml/yolov6l.engine", type=str)
-    parser.add_argument("--input_shape", default=(1, 3, 640, 640), type=tuple)
+    parser.add_argument("--torch_model_dir", default="/workspace/voltaML/voltaml/resnet50.pt", type=str)
+    parser.add_argument("--compiled_model_dir", default="/workspace/voltaML/voltaml/resnet50_int8.engine", type=str)
+    parser.add_argument("--input_shape", default=(1, 3, 224, 224), type=tuple)
     parser.add_argument("--input_name",default="", type=str)
     parser.add_argument("--output_name",default="", type=str)
     parser.add_argument("--dynamic", action='store_true', help='Dynamic ONNX')
     parser.add_argument("--simplify", action='store_true', help='Simplify ONNX')
     parser.add_argument("--is_yolo", action='store_true', help='If model is YoloV5')
-    parser.add_argument("--throughput_batch_size", default=8, type=int)
+    parser.add_argument("--throughput_batch_size", default=1, type=int)
     parser.add_argument("--opset", default=13, type=int)
     parser.add_argument("--precision", default="fp16", type=str)
     parser.add_argument("--calib_input", help="The directory holding images to use for calibration")

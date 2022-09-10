@@ -147,7 +147,7 @@ def gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224), through
         print("PyTorch Inference Throughput: {:.2f} samples / s".format(torch_throughput))
 
     else:
-        t = run(weights=compiled_model)
+        t = run(weights=compiled_model, batch_size=input_shape[0], imgsz=(input_shape[2],input_shape[3]))
         torch_latency = measure_gpu_inference_latency(model, input_size=input_shape, model_type="torch")
         voltaml_gpu_latency = t[1]
         torch_fps = 1 / (torch_latency)

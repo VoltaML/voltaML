@@ -280,6 +280,7 @@ class VoltaGPUCompiler:
                                                 1: 'anchors'}  # shape(1,25200,85)
                                         } if self.dynamic else None
                          )
+        
         # Simplify
         if self.simplify:
             try:

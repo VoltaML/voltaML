@@ -104,6 +104,7 @@ def run(
         dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
         bs = batch_size  # batch_size
     vid_path, vid_writer = [None] * bs, [None] * bs
+    
 
     # Run inference
     model.warmup(imgsz=(1 if pt else bs, 3, *imgsz))  # warmup
@@ -158,11 +159,13 @@ def run(
                 total_pred += 1
         
         seen += 1*batch_size
-    print('Total preds :', total_pred)
         
-
+    # print('Batch Size : ', batch_size)
+    # print('Total preds :', total_pred)
+    # print('Seen : ', seen)
+    
     # Print results
-    t = tuple(x / seen * 1E3 for x in dt)  # speeds per image
+    t = tuple(x / batches * 1E3 for x in dt)  # speeds per image
     tt_s = tuple(x for x in dt)  # total time in sec
     tt_ms = tuple(x * 1E3 for x in dt)  # total time in ms
     LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {(1, 3, *imgsz)}' % t)
