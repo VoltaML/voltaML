@@ -204,28 +204,29 @@ class VoltaCPUCompiler:
         #  we can also set `qconfig` to None to skip quantization for some operators
         
         model_fused = quantize_fx.fuse_fx(self.model)
-        qconfig = get_default_qconfig("qnnpack")
+        qconfig = get_default_qconfig("fbgemm")
         qconfig_dict = {"": qconfig}
         
         # `prepare_fx` inserts observers in the model based on the configuration in `qconfig_dict`
-        model_prepared = prepare_fx(model_fused, qconfig_dict)
+        # model_prepared = prepare_fx(model_fused, qconfig_dict)
         
         #  calibration runs the model with some sample data, which allows observers to record the statistics of
         #  the activation and weigths of the operators
         calibration_data = [torch.randn(self.input_shape) for _ in range(100)]
         for i in range(len(calibration_data)):
-            model_prepared(calibration_data[i])
+            self.model(calibration_data[i])
         
         # `convert_fx` converts a calibrated model to a quantized model, this includes inserting
         #  quantize, dequantize operators to the model and swap floating point operators with quantized operators
-        model_quantized = convert_fx(copy.deepcopy(model_prepared))# benchmark
+        prepared_model = prepare_fx(self.model, qconfig_dict)  # fuse modules and insert observers
+        model_quantized = convert_fx(prepared_model) 
+        # model_quantized = convert_fx(copy.deepcopy(model_prepared))# benchmark
         model_jit = torch.jit.script(model_quantized)
 
         if self.save:
             torch.jit.save(model_jit, self.output_dir)
         
         return model_jit
-
 
 class VoltaGPUCompiler:
 
