@@ -8,7 +8,7 @@ import torch
 import torch.distributed as dist
 import torch.nn as nn
 import torch.nn.functional as F
-from voltaml.yolov6.utils.events import LOGGER
+from voltaml.models.yolov6.utils.events import LOGGER
 
 try:
     import thop  # for FLOPs computation
@@ -84,7 +84,7 @@ def fuse_conv_and_bn(conv, bn):
 
 def fuse_model(model):
     '''Fuse convolution and batchnorm layers of the model.'''
-    from voltaml.yolov6.layers.common import Conv, SimConv, Conv_C3
+    from voltaml.models.yolov6.layers.common import Conv, SimConv, Conv_C3
 
     for m in model.modules():
         if (type(m) is Conv or type(m) is SimConv or type(m) is Conv_C3) and hasattr(m, "bn"):

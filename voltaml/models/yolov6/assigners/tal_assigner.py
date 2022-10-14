@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from voltaml.yolov6.assigners.assigner_utils import select_candidates_in_gts, select_highest_overlaps, iou_calculator
+from voltaml.models.yolov6.assigners.assigner_utils import select_candidates_in_gts, select_highest_overlaps, iou_calculator
 
 class TaskAlignedAssigner(nn.Module):
     def __init__(self, 

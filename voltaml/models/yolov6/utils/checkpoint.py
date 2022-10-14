@@ -4,9 +4,9 @@ import os
 import shutil
 import torch
 import os.path as osp
-from voltaml.yolov6.utils.events import LOGGER
-from voltaml.yolov6.utils.torch_utils import fuse_model
-
+from voltaml.models.yolov6.utils.events import LOGGER
+from voltaml.models.yolov6.utils.torch_utils import fuse_model
+import voltaml.models.yolov6.models
 
 def load_state_dict(weights, model, map_location=None):
     """Load weights from checkpoint file, only assign weights those layers' name and shape are match."""

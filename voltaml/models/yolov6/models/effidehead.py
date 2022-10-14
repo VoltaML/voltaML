@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import math
-from voltaml.yolov6.layers.common import *
-from voltaml.yolov6.assigners.anchor_generator import generate_anchors
-from voltaml.yolov6.utils.general import dist2bbox
+from voltaml.models.yolov6.layers.common import *
+from voltaml.models.yolov6.assigners.anchor_generator import generate_anchors
+from voltaml.models.yolov6.utils.general import dist2bbox
 
 
 class Detect(nn.Module):

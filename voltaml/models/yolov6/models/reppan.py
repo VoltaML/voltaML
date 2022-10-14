@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from voltaml.yolov6.layers.common import RepBlock, RepVGGBlock, BottleRep, BepC3, SimConv, Transpose
+from voltaml.models.yolov6.layers.common import RepBlock, RepVGGBlock, BottleRep, BepC3, SimConv, Transpose
 
 _QUANT=False
 class RepPANNeck(nn.Module):

@@ -1,5 +1,5 @@
 from torch import nn
-from voltaml.yolov6.layers.common import BottleRep, RepVGGBlock, RepBlock, BepC3, SimSPPF, SPPF, ConvWrapper
+from voltaml.models.yolov6.layers.common import BottleRep, RepVGGBlock, RepBlock, BepC3, SimSPPF, SPPF, ConvWrapper
 
 
 class EfficientRep(nn.Module):

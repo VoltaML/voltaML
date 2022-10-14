@@ -32,9 +32,6 @@ def main():
     device = torch.device(0)
     model = load_checkpoint(torch_model_dir, map_location=device, inplace=True, fuse=False)  # load FP32 model
     # download or load the model from disk
-    # model = torchvision.models.detection.retinanet_resnet50_fpn(pretrained=True)
-    # weights = torchvision.models.detection.MaskRCNN_ResNet50_FPN_V2_Weights.DEFAULT
-    # model = torchvision.models.detection.maskrcnn_resnet50_fpn_v2(pretrained=True)
     model.eval()
     
     # model = torch.hub.load('pytorch/vision:v0.10.0', 'deeplabv3_resnet50', pretrained=True)
@@ -69,7 +66,7 @@ def get_args():
     parser.add_argument("--output_name",default="", type=str)
     parser.add_argument("--dynamic", action='store_true', help='Dynamic ONNX')
     parser.add_argument("--simplify", action='store_true', help='Simplify ONNX')
-    parser.add_argument("--is_yolo", action='store_true', help='If model is YoloV5')
+    parser.add_argument("--is_yolo", action='store_true', help='If model is YoloV5/V6')
     parser.add_argument("--throughput_batch_size", default=8, type=int)
     parser.add_argument("--opset", default=13, type=int)
     parser.add_argument("--precision", default="fp16", type=str)

@@ -28,7 +28,6 @@ from torch.ao.quantization import get_default_qconfig
 import torch.quantization.quantize_fx as quantize_fx
 from torch.ao.quantization.quantize_fx import convert_fx, prepare_fx, fuse_fx
 
-from voltaml.preprocess import preprocess_image
 from voltaml.build_engine import EngineBuilder
 
 class TVMCompiler:
@@ -45,10 +44,7 @@ class TVMCompiler:
         self.input_shape_tvm = list(self.input_shape)
         self.input_shape_tvm[0] = relay.Any()
         self.input_shape_tvm = tuple(self.input_shape_tvm)
-        # self.shape_dict = shape_dict
-        # self.img_data = preprocess_image(img_dir)
         input_name = "data"
-        # self.shape_dict = [(input_name, self.input_shape_tvm)]
         self.shape_dict = {
             input_name: self.input_shape
         }
@@ -290,7 +286,6 @@ class VoltaGPUCompiler:
                 # Checks
                 model_onnx = onnx.load(f)  # load onnx model
                 onnx.checker.check_model(model_onnx)  # check onnx model
-                # LOGGER.info(f'{prefix} simplifying with onnx-simplifier {onnxsim.__version__}...')
                 model_onnx, check = onnxsim.simplify(f,
                                                      dynamic_input_shape=self.dynamic,
                                                      input_shapes={'images': list((640,640),(1280,1280))} if self.dynamic else None)

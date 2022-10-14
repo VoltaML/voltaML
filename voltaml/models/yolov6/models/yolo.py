@@ -4,11 +4,11 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from voltaml.yolov6.layers.common import *
-from voltaml.yolov6.utils.torch_utils import initialize_weights
-from voltaml.yolov6.models.efficientrep import *
-from voltaml.yolov6.models.reppan import *
-from voltaml.yolov6.models.effidehead import Detect, build_effidehead_layer
+from voltaml.models.yolov6.layers.common import *
+from voltaml.models.yolov6.utils.torch_utils import initialize_weights
+from voltaml.models.yolov6.models.efficientrep import *
+from voltaml.models.yolov6.models.reppan import *
+from voltaml.models.yolov6.models.effidehead import Detect, build_effidehead_layer
 
 
 class Model(nn.Module):
