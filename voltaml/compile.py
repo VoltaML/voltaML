@@ -207,8 +207,6 @@ class VoltaCPUCompiler:
         qconfig = get_default_qconfig("fbgemm")
         qconfig_dict = {"": qconfig}
         
-        # `prepare_fx` inserts observers in the model based on the configuration in `qconfig_dict`
-        # model_prepared = prepare_fx(model_fused, qconfig_dict)
         
         #  calibration runs the model with some sample data, which allows observers to record the statistics of
         #  the activation and weigths of the operators
