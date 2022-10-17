@@ -1,7 +1,7 @@
 ![lg3v3](https://user-images.githubusercontent.com/107309002/175033667-a58dab6e-ca8f-4739-a371-10a10b51e7e9.jpg)
 
 <p align="center">
-  <b> Accelerate your machine learning and deep learning models by upto 15X </b> 
+  <b> Accelerate your machine learning and deep learning models by upto 10X </b> 
 </p>
 
 <hr style="border:0.5px solid gray">
@@ -30,7 +30,7 @@ VoltaML has compilation support for the following:
 
 ### Docker Container 🐳
 
-`$ docker pull voltaml`
+`$ docker pull voltaml/voltaml:v0.3`
 
 ### Connect to our server 🔌
 
