@@ -177,6 +177,48 @@ Segmentation inference was done on a dummy data with `imagesize = 224` and `batc
   <img src="https://user-images.githubusercontent.com/107309002/196167246-0a080c03-252b-4ce3-85fe-54e6cc136148.png" />
 </p>
 
+# 🤗 Accelerating Huggingface Models on GPU using voltaML 
+
+We're adding support to accelerate Huggingface NLP models with voltaML. This is still in the early stages and only few models listed in the below table are supported. We're working to add more models soon.
+
+```python
+import torch
+from voltaml.compile import VoltaGPUCompiler
+from voltaml.inference import gpu_performance
+
+model = torch.load("path/to/model/dir")
+
+# compile the model by giving paths
+compiler = VoltaGPUCompiler(
+        model=model,
+        output_dir="destination/path/of/compiled/model",
+        input_shape=(1, 3, 224, 224), # example input shape
+        precision="fp16" # specify precision, one of [fp32, fp16, int8]
+    )
+
+# returns the compiled model
+compiled_model = compiler.compile()
+
+# compute and compare performance
+gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224))
+```
+
+| Model                                           | Pytorch (ms) | VoltaML FP16 (ms) | SpeedUp |
+|-------------------------------------------------|--------------|-------------------|---------|
+| bert-base-uncased                               | 6.4          | 1                 | 6.4x     |
+| Jean-Baptiste/camembert-ner                     | 6.3          | 1                 | 6.3x     |
+| gpt2                                            | 6.6          | 1.2               | 5.5x     |
+| xlm-roberta-base                                | 6.4          | 1.08              | 5.9x     |
+| roberta-base                                    | 6.6          | 1.09              | 6.1x     |
+| bert-base-cased                                 | 6.2          | 0.9               | 6.9x     |
+| distilbert-base-uncased                         | 3.5          | 0.6               | 5.8x     |
+| roberta-large                                   | 11.9         | 2.4               | 5.0x     |
+| deepset/xlm-roberta-base-squad2                 | 6.2          | 1.08              | 5.7x     |
+| cardiffnlp/twitter-roberta-base-sentiment       | 6            | 1.07              | 5.6x     |
+| sentence-transformers/all-MiniLM-L6-v2          | 3.2          | 0.42              | 7.6x     |
+| bert-base-chinese                               | 6.3          | 0.97              | 6.5x     |
+| distilbert-base-uncased-finetuned-sst-2-english | 3.4          | 0.6               | 5.7x     |
+| albert-base-v2                                  | 6.7          | 1                 | 6.7x     |
 
 
 ### Enterpise Platform 🛣️
