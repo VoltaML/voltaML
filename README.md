@@ -122,21 +122,39 @@ cpu_performance(compiled_model, model, compiler="tvm", input_shape=(1, 3, 224, 2
 
 
 ## Benchmarks
-### Classification Models Inference Latency (on GPU) ⏱️
-Classification has been done on Imagenet data, `batch size = 1` on NVIDIA RTX 2080Ti. In terms of top 1% and 5% accuracy for `int8` models, we have not seen an accuracy drop of more than 1%. 
-|     Model     | Pytorch Vanilla (ms) | VoltaGPU `FP16` (ms) | VoltaGPU `Int8` (ms) | Speed Gain |
-|:-------------:|:------------:|:------------------:|:--------------------:|:------------:|
-| `squeezenet1_1` |          2.5 |                0.2 |                0.2 |        13x |
-| `resnet18`      |          2.7 |                0.4 |                0.3 |         9x |
-| `resnet34`      |          4.5 |                0.7 |                0.5 |         9x |
-| `resnet50`      |          4.8 |                0.7 |                0.5 |        13x |
-| `resnet101`     |          8.8 |                1.4 |                1.0 |        14x |
-| `densenet121`   |         15.7 |                2.4 |                2.0 |         8x |
-| `densenet169`   |         22.0 |                4.4 |                3.8 |         6x |
-| `densenet201`   |         26.8 |                6.3 |                5.0 |         5x |
-| `vgg11`         |          2.0 |                0.9 |                0.5 |         4x |
-| `vgg16`         |          3.5 |                1.2 |                0.7 |         5x |
-| `vgg19`         |          4.0 |                1.3 |                0.8 |         5x |
+### 🖼️ Classification Models Inference Latency (on GPU) ⏱️
+Classification has been done on Imagenet data, `batch size = 1` and `imagesize = 224` on NVIDIA RTX 2080Ti. In terms of top 1% and 5% accuracy for `int8` models, we have not seen an accuracy drop of more than 1%. 
+
+| Model         | Pytorch (ms) | VoltaGPU FP16 (ms) | VoltaGPU int8 (ms) | Pytorch vs Int8 Speed |
+|---------------|--------------|--------------------|--------------------|-----------------------|
+| squeezenet1_1 | 1.6          | 0.2                | 0.2                | 8.4x                  |
+| resnet18      | 2.7          | 0.4                | 0.3                | 9.0x                  |
+| resnet34      | 4.5          | 0.7                | 0.5                | 9.0x                  |
+| resnet50      | 6.6          | 0.7                | 0.5                | 13.2x                 |
+| resnet101     | 13.6         | 1.3                | 1.0                | 13.6x                 |
+| densenet121   | 15.7         | 2.4                | 2.0                | 7.9x                  |
+| densenet169   | 22.0         | 4.4                | 3.8                | 5.8x                  |
+| densenet201   | 26.8         | 6.3                | 5.0                | 5.4x                  |
+| vgg11         | 2.0          | 0.9                | 0.5                | 4.0x                  |
+| vgg16         | 3.5          | 1.2                | 0.7                | 5.0x                  |
+
+### 🧐 Object Detection (YOLO) Models Inference Latency (on GPU) ⏱️
+Object Detection inference was done on a dummy data with `imagesize = 640` and `batch size = 1` on NVIDIA RTX 2080Ti.
+
+| Model        | Pytorch (ms) | VoltaGPU FP16 (ms) | Pytorch vs FP16 Speed |
+|--------------|--------------|--------------------|-----------------------|
+| YOLOv5n      | 5.2          | 1.2                | 4.3x                  |
+| YOLOv5s      | 5.1          | 1.6                | 3.2x                  |
+| YOLOv5m      | 9.1          | 3.2                | 2.8x                  |
+| YOLOv5l      | 15.3         | 5.1                | 3.0x                  |
+| YOLOv5x      | 30.8         | 6.4                | 4.8x                  |
+| YOLOv6s      | 8.8          | 3.0                | 2.9x                  |
+| YOLOv6l_relu | 23.4         | 5.5                | 4.3x                  |
+| YOLOv6l      | 18.1         | 4.1                | 4.4x                  |
+| YOLOv6n      | 9.1          | 1.6                | 5.7x                  |
+| YOLOv6t      | 8.6          | 2.4                | 3.6x                  |
+| YOLOv5m      | 15.5         | 3.5                | 4.4x                  |
+
 
 ### Enterpise Platform 🛣️
 - [x] Hardware targeted optimised dockers for maximum performance.
