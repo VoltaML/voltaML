@@ -179,6 +179,8 @@ Segmentation inference was done on a dummy data with `imagesize = 224` and `batc
   <img src="https://user-images.githubusercontent.com/107309002/196164772-b32b15ab-6886-4e6f-82fb-70074dfce241.png" />
 </p>
 
+
+
 ### Enterpise Platform 🛣️
 - [x] Hardware targeted optimised dockers for maximum performance.
 - [ ] One-click deployment of the compiled models. 
