@@ -179,7 +179,7 @@ Segmentation inference was done on a dummy data with `imagesize = 224` and `batc
 
 # 🤗 Accelerating Huggingface Models on GPU using voltaML 
 
-We're adding support to accelerate Huggingface NLP models with voltaML. This is still in the early stages and only few models listed in the below table are supported. We're working to add more models soon.
+We're adding support to accelerate Huggingface NLP models with **voltaML**. This is still in the early stages and only few models listed in the below table are supported. We're working to add more models soon.
 
 ```python
 import torch
