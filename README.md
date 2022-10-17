@@ -95,7 +95,7 @@ compiled_model = compiler.compile()
 gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224))
 ```
 
-Using **`TVMCompiler`**: 
+Using **`TVMCompiler`** (Experimental and limited support currently): 
 
 ```python
 import torch
