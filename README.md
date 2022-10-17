@@ -156,6 +156,24 @@ Object Detection inference was done on a dummy data with `imagesize = 640` and `
 | YOLOv5m      | 15.5         | 3.5                | 4.4x                  |
 
 
+### 🎨 Segmentation Models Inference Latency (on GPU) ⏱️
+Segmentation inference was done on a dummy data with `imagesize = 224` and `batch size = 1` on NVIDIA RTX 2080Ti.
+
+| Model                       | Pytorch (ms) | VoltaGPU FP16 (ms) BS1 | VoltaGPU Int8 (ms) BS1 | Speed Up (X) |
+|-----------------------------|--------------|------------------------|------------------------|--------------|
+| FCN_Resnet50                | 8.3          | 2.3                    | 1.8                    | 3.6x         |
+| FCN_Resnet101               | 14.7         | 3.5                    | 2.5                    | 5.9x         |
+| DeeplabV3_Resnet50          | 12.1         | 2.5                    | 1.3                    | 9.3x         |
+| DeeplabV3_Resnet101         | 18.7         | 3.6                    | 2.0                    | 9.4x         |
+| DeeplabV3_MobileNetV3_Large | 6.1          | 1.5                    | 0.8                    | 7.6x         |
+| DeeplabV3Plus_ResNet50      | 6.1          | 1.1                    | 0.8                    | 7.6x         |
+| DeeplabV3Plus_ResNet34      | 4.7          | 0.9                    | 0.8                    | 5.9x         |
+| UNet_ResNet50               | 6.2          | 1.3                    | 1                      | 6.2x         |
+| UNet_ResNet34               | 4.3          | 1.1                    | 0.8                    | 5.4x         |
+| FPN_ResNet50                | 5.5          | 1.2                    | 1                      | 5.5x         |
+| FPN_ResNet34                | 4.2          | 1.1                    | 1                      | 4.2x         |
+
+
 ### Enterpise Platform 🛣️
 - [x] Hardware targeted optimised dockers for maximum performance.
 - [ ] One-click deployment of the compiled models. 
