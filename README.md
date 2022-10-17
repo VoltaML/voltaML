@@ -221,6 +221,34 @@ gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224))
 | albert-base-v2                                  | 6.7          | 1                 | 6.7x     |
 
 
+# voltaTrees ⚡🌴
+
+A LLVM-based compiler for XGBoost and LightGBM decision trees.
+
+`voltatrees` converts trained XGBoost and LightGBM models to optimized machine code, speeding-up prediction by ≥10x.
+
+## Example
+
+```python
+import voltatrees as vt
+
+model = vt.XGBoostRegressor.Model(model_file="NYC_taxi/model.txt")
+model.compile()
+model.predict(df)
+```
+
+## Installation
+
+```bash
+git clone git clone https://github.com/VoltaML/volta-trees.git
+cd volta-trees/
+pip install -e .
+```
+
+## Benchmarks
+
+(TBD on bare-metal machine)
+
 ### Enterpise Platform 🛣️
 - [x] Hardware targeted optimised dockers for maximum performance.
 - [ ] One-click deployment of the compiled models. 
