@@ -173,10 +173,8 @@ Segmentation inference was done on a dummy data with `imagesize = 224` and `batc
 | FPN_ResNet34                | 4.2          | 1.1                    | 1                      | 4.2x         |
 
 
-
-
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/107309002/196164772-b32b15ab-6886-4e6f-82fb-70074dfce241.png" />
+  <img src="https://user-images.githubusercontent.com/107309002/196167246-0a080c03-252b-4ce3-85fe-54e6cc136148.png" />
 </p>
 
 
