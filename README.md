@@ -159,7 +159,7 @@ Object Detection inference was done on a dummy data with `imagesize = 640` and `
 ### 🎨 Segmentation Models Inference Latency (on GPU) ⏱️
 Segmentation inference was done on a dummy data with `imagesize = 224` and `batch size = 1` on NVIDIA RTX 2080Ti.
 
-| Model                       | Pytorch (ms) | VoltaGPU FP16 (ms) BS1 | VoltaGPU Int8 (ms) BS1 | Speed Up (X) |
+| Model                       | Pytorch (ms) | VoltaGPU FP16 (ms)  | VoltaGPU Int8 (ms) | Speed Up (X) |
 |-----------------------------|--------------|------------------------|------------------------|--------------|
 | FCN_Resnet50                | 8.3          | 2.3                    | 1.8                    | 3.6x         |
 | FCN_Resnet101               | 14.7         | 3.5                    | 2.5                    | 5.9x         |
