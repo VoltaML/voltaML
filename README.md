@@ -221,7 +221,7 @@ gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224))
 | albert-base-v2                                  | 6.7          | 1                 | 6.7x     |
 
 
-# voltaTrees ⚡🌴
+# voltaTrees ⚡🌴 -> [Link](https://github.com/VoltaML/volta-trees)
 
 A LLVM-based compiler for XGBoost and LightGBM decision trees.
 
