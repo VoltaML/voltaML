@@ -3,6 +3,10 @@
 </p>
 
 <p align="center">
+<img width="141" alt="Screenshot 2022-10-19 at 3 55 14 PM" src="https://user-images.githubusercontent.com/107309002/196666740-3295f75c-fb82-4d8f-99e8-0aca0f9f34ed.png">
+</p>
+
+<p align="center">
   <b> Accelerate your machine learning and deep learning models by upto 10X </b> 
 </p>
 
