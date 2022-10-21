@@ -75,7 +75,7 @@ def load_pytorch_model(model_name="resnet50"):
     model = getattr(models, model_name)(pretrained=True)
     return model
 
-def cpu_performance(compiled_model, torch_model, compiler="voltaml", input_shape=(1, 3, 224, 224), throughput_batch_size=64):
+def cpu_performance(compiled_model, torch_model, compiler="voltaml", input_shape=(1, 3, 224, 224), throughput_batch_size=1):
 
     input_shape_for_throughput = list(input_shape)
     input_shape_for_throughput[0] = throughput_batch_size
