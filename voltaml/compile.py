@@ -4,13 +4,13 @@ import os
 from PIL import Image
 import numpy as np
 import torch
-import tvm.relay as relay
-import tvm
-from tvm.contrib.download import download_testdata
-from tvm.contrib import graph_executor, utils
-import tvm.auto_scheduler as auto_scheduler
-from tvm.autotvm.tuner import XGBTuner
-from tvm import autotvm
+# import tvm.relay as relay
+# import tvm
+# from tvm.contrib.download import download_testdata
+# from tvm.contrib import graph_executor, utils
+# import tvm.auto_scheduler as auto_scheduler
+# from tvm.autotvm.tuner import XGBTuner
+# from tvm import autotvm
 import pickle
 import copy
 import numpy as np
@@ -29,6 +29,57 @@ import torch.quantization.quantize_fx as quantize_fx
 from torch.ao.quantization.quantize_fx import convert_fx, prepare_fx, fuse_fx
 
 from voltaml.build_engine import EngineBuilder
+
+
+import argparse
+import gc
+import logging
+import os
+from pathlib import Path
+from typing import Callable, Dict, List, Tuple, Type, Union
+
+import numpy as np
+import torch
+from transformers import (
+    AutoConfig,
+    AutoModelForCausalLM,
+    AutoModelForQuestionAnswering,
+    AutoModelForSequenceClassification,
+    AutoModelForTokenClassification,
+    AutoTokenizer,
+    PretrainedConfig,
+    PreTrainedModel,
+    PreTrainedTokenizer,
+)
+
+from voltaml.transformer.backends.ort_utils import (
+    cpu_quantization,
+    create_model_for_provider,
+    inference_onnx_binding,
+    optimize_onnx,
+)
+from voltaml.transformer.backends.pytorch_utils import (
+    convert_to_onnx,
+    get_model_size,
+    infer_classification_pytorch,
+    infer_feature_extraction_pytorch,
+)
+from voltaml.transformer.backends.st_utils import STransformerWrapper, load_sentence_transformers
+from voltaml.transformer.benchmarks.utils import (
+    compare_outputs,
+    generate_multiple_inputs,
+    print_timings,
+    setup_logging,
+    to_numpy,
+    track_infer_time,
+)
+from voltaml.transformer.triton.configuration import Configuration, EngineType
+from voltaml.transformer.triton.configuration_decoder import ConfigurationDec
+from voltaml.transformer.triton.configuration_encoder import ConfigurationEnc
+from voltaml.transformer.triton.configuration_question_answering import ConfigurationQuestionAnswering
+from voltaml.transformer.triton.configuration_token_classifier import ConfigurationTokenClassifier
+from voltaml.transformer.utils.args import parse_args
+
 
 class TVMCompiler:
 
@@ -317,3 +368,176 @@ class VoltaGPUCompiler:
         context = engine.create_execution_context()
         return context
         
+        
+def VoltaNLPCompile(verbose=False,
+                    device=None, #choices=["cpu", "cuda"]
+                    backend=["onnx"], #choices=["onnx","tensorrt"]
+                    seq_len=[16, 16, 16], # "sequence lengths to optimize for (min, optimal, max). Used by TensorRT and benchmarks."
+                    seed=int(123),
+                    nb_threads=1,
+                    auth_token=str(''),
+                    output='models',
+                    tokenizer=str(''),
+                    model=str(''),
+                    task="classification",# ["classification", "embedding", "text-generation", "token-classification", "question-answering"]
+                    batch_size=[1,1,1], #"batch sizes to optimize for (min, optimal, max). Used by TensorRT and benchmarks."
+                    warmup=int(10), # "# of inferences to warm each model"
+                    nb_measures=int(1000),
+                    nb_instances=int(1),
+                    atol=float(3e-1), #"tolerance when comparing outputs to Pytorch ones"
+                    quantization=False,
+                    name='transformer',
+                    fast=False, # skip the Pytorch (FP16) benchmark"
+                    workspace_size=int(10000)
+                   ):
+    
+    setup_logging(level=logging.INFO if verbose else logging.WARNING)
+    # logging.info("running with commands: %s", commands)
+
+    if device is None:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    if device == "cpu" and "tensorrt" in backend:
+        raise Exception("can't perform inference on CPU and use Nvidia TensorRT as backend")
+
+    if len(seq_len) == len(set(seq_len)) and "tensorrt" in backend:
+        logging.warning("having different sequence lengths may make TensorRT slower")
+
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    torch.set_num_threads(nb_threads)
+
+    if isinstance(auth_token, str) and auth_token.lower() in ["true", "t"]:
+        auth_token = True
+    elif isinstance(auth_token, str):
+        auth_token = auth_token
+    else:
+        auth_token = None
+    run_on_cuda: bool = device.startswith("cuda")
+    Path(output).mkdir(parents=True, exist_ok=True)
+    onnx_model_path = os.path.join(output, "model-original.onnx")
+    onnx_optim_model_path = os.path.join(output, "model.onnx")
+    tensorrt_path = os.path.join(output, "model.plan")
+    if run_on_cuda:
+        assert torch.cuda.is_available(), "CUDA/GPU is not available on Pytorch. Please check your CUDA installation"
+    tokenizer_path = tokenizer if tokenizer else model
+    tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(tokenizer_path, use_auth_token=auth_token)
+    model_config: PretrainedConfig = AutoConfig.from_pretrained(
+        pretrained_model_name_or_path=model, use_auth_token=auth_token
+    )
+    input_names: List[str] = tokenizer.model_input_names
+    if task == "embedding":
+        model_pytorch: Union[PreTrainedModel, STransformerWrapper] = load_sentence_transformers(
+            model, use_auth_token=auth_token
+        )
+    elif task == "classification":
+        model_pytorch = AutoModelForSequenceClassification.from_pretrained(model, use_auth_token=auth_token)
+    elif task == "token-classification":
+        model_pytorch = AutoModelForTokenClassification.from_pretrained(model, use_auth_token=auth_token)
+    elif task == "question-answering":
+        model_pytorch = AutoModelForQuestionAnswering.from_pretrained(model, use_auth_token=auth_token)
+    elif task == "text-generation":
+        model_pytorch = AutoModelForCausalLM.from_pretrained(model, use_auth_token=auth_token)
+        input_names = ["input_ids"]
+    else:
+        raise Exception(f"unknown task: {task}")
+
+    logging.info(f"axis: {input_names}")
+
+    model_pytorch.eval()
+    if run_on_cuda:
+        model_pytorch.cuda()
+
+    tensor_shapes = list(zip(batch_size, seq_len))
+    # take optimial size
+    inputs_pytorch = generate_multiple_inputs(
+        batch_size=tensor_shapes[1][0],
+        seq_len=tensor_shapes[1][1],
+        input_names=input_names,
+        device=device,
+        nb_inputs_to_gen=warmup,
+    )
+
+    # create onnx model and compare results
+    convert_to_onnx(
+        model_pytorch=model_pytorch,
+        output_path=onnx_model_path,
+        inputs_pytorch=inputs_pytorch[0],
+        quantization=quantization,
+        var_output_seq=task in ["text-generation", "token-classification", "question-answering"],
+        output_names=["output"] if task != "question-answering" else ["start_logits", "end_logits"],
+    )
+
+    logging.info("cleaning up")
+    if run_on_cuda:
+        torch.cuda.empty_cache()
+    gc.collect()
+
+    if "tensorrt" in backend:
+        logging.info("preparing TensorRT (FP16) benchmark")
+        try:
+            import tensorrt as trt
+            from tensorrt.tensorrt import ICudaEngine, Logger, Runtime
+
+            from voltaml.transformer.backends.trt_utils import build_engine, load_engine, save_engine
+        except ImportError:
+            raise ImportError(
+                "It seems that TensorRT is not yet installed. "
+                "It is required when you declare TensorRT backend."
+                "Please find installation instruction on "
+                "https://docs.nvidia.com/deeplearning/tensorrt/install-guide/index.html"
+            )
+        trt_logger: Logger = trt.Logger(trt.Logger.VERBOSE if verbose else trt.Logger.WARNING)
+        runtime: Runtime = trt.Runtime(trt_logger)
+        engine: ICudaEngine = build_engine(
+            runtime=runtime,
+            onnx_file_path=onnx_model_path,
+            logger=trt_logger,
+            min_shape=tensor_shapes[0],
+            optimal_shape=tensor_shapes[1],
+            max_shape=tensor_shapes[2],
+            workspace_size=workspace_size * 1024 * 1024,
+            fp16=not quantization,
+            int8=quantization,
+        )
+        save_engine(engine=engine, engine_file_path=tensorrt_path)
+        # important to check the engine has been correctly serialized
+        tensorrt_model: Callable[[Dict[str, torch.Tensor]], Dict[str, torch.Tensor]] = load_engine(
+            runtime=runtime, engine_file_path=tensorrt_path
+        )
+
+        del engine, tensorrt_model, runtime  # delete all tensorrt objects
+        gc.collect()
+        
+    if "onnx" in backend:
+        num_attention_heads, hidden_size = get_model_size(path=model)
+        # create optimized onnx model and compare results
+        optimize_onnx(
+            onnx_path=onnx_model_path,
+            onnx_optim_model_path=onnx_optim_model_path,
+            fp16=run_on_cuda,
+            use_cuda=run_on_cuda,
+            num_attention_heads=num_attention_heads,
+            hidden_size=hidden_size,
+            architecture=model_config.model_type,
+        )
+        if device == "cpu" and quantization:
+            cpu_quantization(input_model_path=onnx_optim_model_path, output_model_path=onnx_optim_model_path)
+
+        ort_provider = "CUDAExecutionProvider" if run_on_cuda else "CPUExecutionProvider"
+        for provider, model_path, benchmark_name in [
+            (ort_provider, onnx_model_path, "ONNX Runtime (FP32)"),
+            (ort_provider, onnx_optim_model_path, "ONNX Runtime (optimized)"),
+        ]:
+            logging.info("preparing %s benchmark", benchmark_name)
+            ort_model = create_model_for_provider(
+                path=model_path,
+                provider_to_use=provider,
+                nb_threads=nb_threads,
+            )
+
+            del ort_model
+            gc.collect()
+
+    print("Engine Building Completed Successfully.")
+    
