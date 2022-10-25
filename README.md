@@ -66,35 +66,12 @@ python setup.py install
 ````
 ## Usage
 
-Using **`VoltaCPUCompiler`**:
-
-```python
-import torch
-from voltaml.compile import VoltaCPUCompiler
-from voltaml.inference import cpu_performance
-
-model = torch.load("path/to/model/dir")
-
-# compile the model by giving paths
-compiler = VoltaCPUCompiler(
-        model=model,
-        output_dir="destination/path/of/compiled/model",
-        input_shape=(1, 3, 224, 224) # example input shape
-    )
-
-# returns the compiled model
-compiled_model = compiler.compile()
-
-# compute and compare performance
-cpu_performance(compiled_model, model, compiler="voltaml", input_shape=(1, 3, 224, 224))
-```
-
 Using **`VoltaGPUCompiler`**:
 
 
 ```python
 import torch
-from voltaml.compile import VoltaGPUCompiler
+from voltaml.compile import VoltaGPUCompiler, VoltaCPUCompiler, TVMCompiler
 from voltaml.inference import gpu_performance
 
 model = torch.load("path/to/model/dir")
@@ -104,7 +81,8 @@ compiler = VoltaGPUCompiler(
         model=model,
         output_dir="destination/path/of/compiled/model",
         input_shape=(1, 3, 224, 224), # example input shape
-        precision="fp16" # specify precision, one of [fp32, fp16, int8]
+        precision="fp16" # specify precision[fp32, fp16, int8] - Only for GPU compiler
+        target="llvm" # specify target device - Only for TVM compiler
     )
 
 # returns the compiled model
@@ -112,38 +90,16 @@ compiled_model = compiler.compile()
 
 # compute and compare performance
 gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224))
-```
-
-Using **`TVMCompiler`** (Experimental and limited support currently): 
-
-```python
-import torch
-from voltaml.compile import TVMCompiler
-from voltaml.inference import cpu_performance
-
-model = torch.load("path/to/model/dir")
-
-# compile the model by giving paths
-compiler = TVMCompiler(
-        model=model,
-        output_dir="destination/path/of/compiled/model",
-        input_shape=(1, 3, 224, 224), # example input shape
-        target="llvm" # specify target device
-    )
-
-# returns the compiled model
-compiled_model = compiler.compile()
-
-# compute and compare performance
+cpu_performance(compiled_model, model, compiler="voltaml", input_shape=(1, 3, 224, 224))
 cpu_performance(compiled_model, model, compiler="tvm", input_shape=(1, 3, 224, 224))
-```
 
+```
 ## Notebooks
 
 01. [ResNet-50](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/ResNet50%20Classification%20Demo.ipynb) image classification 
 02. [DeeplabV3_MobileNet_v3_Large](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/DeeplabV3%20Segmentation%20Demo.ipynb) Segmentation
-03. [YOLOv5](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/YoloV5%20Demo.ipynb)Object Detection YOLOv5
-04. [YOLOv6](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/YoloV6%20Demo.ipynb)Object Detection YOLOv6 
+03. [YOLOv5](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/YoloV5%20Demo.ipynb) Object Detection YOLOv5
+04. [YOLOv6](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/YoloV6%20Demo.ipynb) Object Detection YOLOv6 
 05. [Bert_Base_Uncased](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/Bert_base_uncased_HuggingFace.ipynb) Huggingface
 
 
