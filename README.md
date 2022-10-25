@@ -138,6 +138,14 @@ compiled_model = compiler.compile()
 cpu_performance(compiled_model, model, compiler="tvm", input_shape=(1, 3, 224, 224))
 ```
 
+## Notebooks
+
+* 01. [ResNet-50] image classification 
+* 02. [DeeplabV3_MobileNet_v3_Large] Segmentation
+* 03. [YOLOv5]Object Detection YOLOv5
+* 04. [YOLOv6]Object Detection YOLOv6 
+* 05. [Bert_Base_Uncased] Huggingface
+
 
 ## Benchmarks
 ### 🖼️ Classification Models Inference Latency (on GPU) ⏱️
