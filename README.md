@@ -47,10 +47,10 @@
 
 Requirements
 
-*CUDA Version >11.x <br/>
-*TensorRT == 8.4.1.2<br/>
-*PyTorch == 1.12 cu11.x<br/>
-*NVIDIA Driver version > 510
+* CUDA Version >11.x <br/>
+* TensorRT == 8.4.1.2<br/>
+* PyTorch == 1.12 cu11.x<br/>
+* NVIDIA Driver version > 510
 
 ````
 git clone https://github.com/VoltaML/voltaML.git
@@ -64,7 +64,7 @@ python setup.py install
 ### Docker Container 🐳
 
 ````
-`$ docker pull voltaml/voltaml:v0.4`
+$ docker pull voltaml/voltaml:v0.4
 
 git clone https://github.com/VoltaML/voltaML.git
 
