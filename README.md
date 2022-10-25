@@ -189,6 +189,8 @@ We're adding support to accelerate Huggingface NLP models with **voltaML**. This
 from voltaml.compile import VoltaNLPCompile
 from voltaml.inference import nlp_performance
 
+
+model='bert-base-cased'
 backend=["tensorrt","onnx"] 
 seq_len=[1, 1, 1] 
 task="classification"
