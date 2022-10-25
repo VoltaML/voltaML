@@ -47,7 +47,7 @@
 
 ### Docker Container 🐳
 
-`$ docker pull voltaml/voltaml:v0.3`
+`$ docker pull voltaml/voltaml:v0.4`
 
 ## Usage
 
