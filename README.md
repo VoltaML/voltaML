@@ -60,9 +60,7 @@ python setup.py install
 ### Docker Container 🐳
 ````
 $ docker pull voltaml/voltaml:v0.4
-git clone https://github.com/VoltaML/voltaML.git
-cd voltaML
-python setup.py install
+docker run -it --gpus=all -p "8888:8888" voltaml/voltaml:v0.4 jupyter lab --port=8888 --no-browser --ip 0.0.0.0 --allow-root
 ````
 ## Usage
 
