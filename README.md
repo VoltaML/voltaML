@@ -159,7 +159,7 @@ Segmentation inference was done on a dummy data with `imagesize = 224` and `batc
 
 # 🤗 Accelerating Huggingface Models using voltaML 
 
-We're adding support to accelerate Huggingface NLP models with **voltaML**. This is still in the early stages and only few models listed in the below table are supported. We're working to add more models soon.
+We're adding support to accelerate Huggingface NLP models with **voltaML**. This work has been heavily inspired from [ELS-RD]'s(https://github.com/ELS-RD/transformer-deploy) work. This is still in the early stages and only few models listed in the below table are supported. We're working to add more models soon.
 
 ```python
 from voltaml.compile import VoltaNLPCompile
