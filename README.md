@@ -43,11 +43,38 @@
 
 ## Installation
 
-### Installation can be done via:
+### Own setup:
+
+Requirements
+
+CUDA VERSION >11.x
+TensorRT == 8.4.1.2
+PyTorch == 1.12 cu11.x
+NVIDIA DRIVER > 510
+
+````
+git clone https://github.com/VoltaML/voltaML.git
+
+cd voltaML
+
+python setup.py install
+
+````
+
 
 ### Docker Container 🐳
 
 `$ docker pull voltaml/voltaml:v0.4`
+
+
+````
+git clone https://github.com/VoltaML/voltaML.git
+
+cd voltaML
+
+python setup.py install
+
+````
 
 ## Usage
 
