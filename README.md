@@ -186,25 +186,20 @@ Segmentation inference was done on a dummy data with `imagesize = 224` and `batc
 We're adding support to accelerate Huggingface NLP models with **voltaML**. This is still in the early stages and only few models listed in the below table are supported. We're working to add more models soon.
 
 ```python
-import torch
-from voltaml.compile import VoltaGPUCompiler
-from voltaml.inference import gpu_performance
+from voltaml.compile import VoltaNLPCompile
+from voltaml.inference import nlp_performance
 
-model = torch.load("path/to/model/dir")
 
-# compile the model by giving paths
-compiler = VoltaGPUCompiler(
-        model=model,
-        output_dir="destination/path/of/compiled/model",
-        input_shape=(1, 3, 224, 224), # example input shape
-        precision="fp16" # specify precision, one of [fp32, fp16, int8]
-    )
+model='bert-base-cased'
+backend=["tensorrt","onnx"] 
+seq_len=[1, 1, 1] 
+task="classification"
+batch_size=[1,1,1]
 
-# returns the compiled model
-compiled_model = compiler.compile()
+VoltaNLPCompile(verbose=False, device='cuda', backend=backend,seq_len=seq_len, model=model)
 
-# compute and compare performance
-gpu_performance(compiled_model, model, input_shape=(1, 3, 224, 224))
+nlp_performance(verbose=False, device='cuda', backend=backend, seq_len=seq_len, model=model)
+
 ```
 
 | Model                                           | Pytorch (ms) | VoltaML FP16 (ms) | SpeedUp |
