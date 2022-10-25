@@ -66,9 +66,6 @@ python setup.py install
 ````
 ## Usage
 
-Using **`VoltaGPUCompiler`**:
-
-
 ```python
 import torch
 from voltaml.compile import VoltaGPUCompiler, VoltaCPUCompiler, TVMCompiler
