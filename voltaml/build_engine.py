@@ -197,9 +197,21 @@ class EngineBuilder:
                         ImageBatcher(calib_input, calib_shape, calib_dtype, max_num_images=calib_num_images,
                                      exact_batches=True, preprocessor=calib_preprocessor))
 
-        with self.builder.build_engine(self.network, self.config) as engine, open(engine_path, "wb") as f:
+        # with self.builder.build_engine(self.network, self.config) as engine, open(engine_path, "wb") as f:
+        #     log.info("Serializing engine to file: {:}".format(engine_path))
+        #     f.write(engine.serialize())
+            
+        engine_bytes = None
+        try:
+            engine_bytes = self.builder.build_serialized_network(self.network, self.config)
+        except AttributeError:
+            engine = self.builder.build_engine(self.network, self.config)
+            engine_bytes = engine.serialize()
+            del engine
+        assert engine_bytes
+        with open(engine_path, "wb") as f:
             log.info("Serializing engine to file: {:}".format(engine_path))
-            f.write(engine.serialize())
+            f.write(engine_bytes)
 
 
 def main(args):

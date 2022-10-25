@@ -3,7 +3,7 @@ import time
 import numpy as np
 import torch
 from torchvision import models
-# import tvm
+import tvm
 from tqdm import tqdm
 from tqdm import trange
 from scipy.special import softmax

@@ -5,12 +5,12 @@ from PIL import Image
 import numpy as np
 import torch
 # import tvm.relay as relay
-# import tvm
-# from tvm.contrib.download import download_testdata
-# from tvm.contrib import graph_executor, utils
-# import tvm.auto_scheduler as auto_scheduler
-# from tvm.autotvm.tuner import XGBTuner
-# from tvm import autotvm
+import tvm
+from tvm.contrib.download import download_testdata
+from tvm.contrib import graph_executor, utils
+import tvm.auto_scheduler as auto_scheduler
+from tvm.autotvm.tuner import XGBTuner
+from tvm import autotvm
 import pickle
 import copy
 import numpy as np

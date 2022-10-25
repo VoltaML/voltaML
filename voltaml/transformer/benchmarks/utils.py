@@ -40,12 +40,12 @@ def print_timings(name: str, timings: List[float]) -> None:
     print(
         f"[{name}] "
         f"mean={mean_time:.2f}ms, "
-        f"sd={std_time:.2f}ms, "
-        f"min={min_time:.2f}ms, "
-        f"max={max_time:.2f}ms, "
-        f"median={median:.2f}ms, "
-        f"95p={percent_95_time:.2f}ms, "
-        f"99p={percent_99_time:.2f}ms"
+        # f"sd={std_time:.2f}ms, "
+        # f"min={min_time:.2f}ms, "
+        # f"max={max_time:.2f}ms, "
+        # f"median={median:.2f}ms, "
+        # f"95p={percent_95_time:.2f}ms, "
+        # f"99p={percent_99_time:.2f}ms"
     )
 
 

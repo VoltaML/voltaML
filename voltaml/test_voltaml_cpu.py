@@ -25,8 +25,8 @@ def main():
 
 def get_args():
     parser = ArgumentParser()
-    parser.add_argument("--torch_model_dir", default="/media/abhirooptejomay/7867a1d9-0cf5-4857-a984-03e6265ebdcf/studies/voltaml/resnet18.pth", type=str)
-    parser.add_argument("--compiled_model_dir", default="/media/abhirooptejomay/7867a1d9-0cf5-4857-a984-03e6265ebdcf/studies/voltaml/resnet18_compiled.pth", type=str)
+    parser.add_argument("--torch_model_dir", default="/resnet18.pth", type=str)
+    parser.add_argument("--compiled_model_dir", default="/resnet18_compiled.pth", type=str)
     parser.add_argument("--input_shape", default=(1, 3, 224, 224), type=tuple)
     parser.add_argument("--throughput_batch_size", default=64, type=int)
     args = parser.parse_args()
