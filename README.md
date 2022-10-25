@@ -59,8 +59,9 @@ python setup.py install
 ````
 ### Docker Container 🐳
 ````
-$ docker pull voltaml/voltaml:v0.4
-docker run -it --gpus=all -p "8888:8888" voltaml/voltaml:v0.4 jupyter lab --port=8888 --no-browser --ip 0.0.0.0 --allow-root
+docker pull voltaml/voltaml:v0.4
+docker run -it --gpus=all -p "8888:8888" voltaml/voltaml:v0.4 \ 
+        jupyter lab --port=8888 --no-browser --ip 0.0.0.0 --allow-root
 ````
 ## Usage
 
