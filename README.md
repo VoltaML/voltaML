@@ -47,9 +47,9 @@
 
 Requirements
 
-CUDA VERSION >11.x
-TensorRT == 8.4.1.2
-PyTorch == 1.12 cu11.x
+CUDA Version >11.x <br/>
+TensorRT == 8.4.1.2<br/>
+PyTorch == 1.12 cu11.x<br/>
 NVIDIA DRIVER > 510
 
 ````
