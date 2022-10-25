@@ -45,7 +45,7 @@
 
 ### Own setup:
 
-Requirements
+Requirements:
 
 * CUDA Version >11.x <br/>
 * TensorRT == 8.4.1.2<br/>
@@ -54,25 +54,16 @@ Requirements
 
 ````
 git clone https://github.com/VoltaML/voltaML.git
-
 cd voltaML
-
 python setup.py install
 ````
-
-
 ### Docker Container 🐳
-
 ````
 $ docker pull voltaml/voltaml:v0.4
-
 git clone https://github.com/VoltaML/voltaML.git
-
 cd voltaML
-
 python setup.py install
 ````
-
 ## Usage
 
 Using **`VoltaCPUCompiler`**:
