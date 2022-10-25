@@ -140,11 +140,11 @@ cpu_performance(compiled_model, model, compiler="tvm", input_shape=(1, 3, 224, 2
 
 ## Notebooks
 
-01. [ResNet-50] (https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/ResNet50%20Classification%20Demo.ipynb) image classification 
-02. [DeeplabV3_MobileNet_v3_Large] Segmentation
-03. [YOLOv5]Object Detection YOLOv5
-04. [YOLOv6]Object Detection YOLOv6 
-05. [Bert_Base_Uncased] Huggingface
+01. [ResNet-50](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/ResNet50%20Classification%20Demo.ipynb) image classification 
+02. [DeeplabV3_MobileNet_v3_Large](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/DeeplabV3%20Segmentation%20Demo.ipynb) Segmentation
+03. [YOLOv5](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/YoloV5%20Demo.ipynb)Object Detection YOLOv5
+04. [YOLOv6](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/YoloV6%20Demo.ipynb)Object Detection YOLOv6 
+05. [Bert_Base_Uncased](https://github.com/VoltaML/voltaML/blob/main/demo%20notebooks/Bert_base_uncased_HuggingFace.ipynb) Huggingface
 
 
 ## Benchmarks
