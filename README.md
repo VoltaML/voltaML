@@ -225,6 +225,10 @@ pip install -e .
 On smaller datasets, voltaTrees is 2-3X faster than Treelite by DMLC. Testing on large scale dataset is yet to be conducted.
 
 ### Enterpise Platform 🛣️
+
+Any enterprise customers who would like a fully managed solution hosted on your own cloud, please contact us at <harish@voltaml.com>
+
+- [x] Fully managed and cloud-hosted optimization engine.
 - [x] Hardware targeted optimised dockers for maximum performance.
 - [ ] One-click deployment of the compiled models. 
 - [ ] Cost-benefit analysis dashboard for optimal deployment.
