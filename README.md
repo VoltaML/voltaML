@@ -103,6 +103,9 @@ cpu_performance(compiled_model, model, compiler="tvm", input_shape=(1, 3, 224, 2
 ### 🖼️ Classification Models Inference Latency (on GPU) ⏱️
 Classification has been done on Imagenet data, `batch size = 1` and `imagesize = 224` on NVIDIA RTX 2080Ti. In terms of top 1% and 5% accuracy for `int8` models, we have not seen an accuracy drop of more than 1%. 
 
+![Pytorch (ms), VoltaGPU FP16 (ms) and VoltaGPU int8 (ms)](https://user-images.githubusercontent.com/107309002/198651892-ec4f37f7-18d0-4a77-9a90-8f1ecf312658.png)
+
+
 | Model         | Pytorch (ms) | VoltaGPU FP16 (ms) | VoltaGPU int8 (ms) | Pytorch vs Int8 Speed |
 |---------------|--------------|--------------------|--------------------|-----------------------|
 | squeezenet1_1 | 1.6          | 0.2                | 0.2                | 8.4x                  |
@@ -118,6 +121,9 @@ Classification has been done on Imagenet data, `batch size = 1` and `imagesize =
 
 ### 🧐 Object Detection (YOLO) Models Inference Latency (on GPU) ⏱️
 Object Detection inference was done on a dummy data with `imagesize = 640` and `batch size = 1` on NVIDIA RTX 2080Ti.
+
+![Pytorch (ms) and VoltaGPU FP16 (ms)](https://user-images.githubusercontent.com/107309002/198652036-4b14bd44-aa94-4d0c-8e4d-bac2cf34df56.png)
+
 
 | Model        | Pytorch (ms) | VoltaGPU FP16 (ms) | Pytorch vs FP16 Speed |
 |--------------|--------------|--------------------|-----------------------|
@@ -136,6 +142,9 @@ Object Detection inference was done on a dummy data with `imagesize = 640` and `
 
 ### 🎨 Segmentation Models Inference Latency (on GPU) ⏱️
 Segmentation inference was done on a dummy data with `imagesize = 224` and `batch size = 1` on NVIDIA RTX 2080Ti.
+
+![Pytorch (ms), VoltaGPU FP16 (ms) and VoltaGPU Int8 (ms)(1)](https://user-images.githubusercontent.com/107309002/198652188-8be78e8e-f2ea-4d79-83b2-438825882c82.png)
+
 
 | Model                       | Pytorch (ms) | VoltaGPU FP16 (ms)  | VoltaGPU Int8 (ms) | Speed Up (X) |
 |-----------------------------|--------------|------------------------|------------------------|--------------|
@@ -176,6 +185,8 @@ VoltaNLPCompile(model=model, device='cuda', backend=backend, seq_len=seq_len)
 nlp_performance(model=model, device='cuda', backend=backend, seq_len=seq_len)
 
 ```
+
+![Pytorch (ms) and VoltaML FP16 (ms)](https://user-images.githubusercontent.com/107309002/198652298-35e0168e-e962-4637-98b2-e10fc102b523.png)
 
 | Model                                           | Pytorch (ms) | VoltaML FP16 (ms) | SpeedUp |
 |-------------------------------------------------|--------------|-------------------|---------|
