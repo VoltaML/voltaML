@@ -1,5 +1,6 @@
 import warnings
 warnings.filterwarnings("ignore")
+import io
 import os
 from PIL import Image
 import numpy as np
@@ -116,21 +117,22 @@ class TVMCompiler:
 
                 # jit_model = torch.jit.trace(model, torch.tensor(self.img_data).float()) 
 
-                torch.onnx.export(self.model, 
-                    torch.tensor(self.img_data).float(),
-                    "tmp.onnx",
-                    verbose=False,
-                    input_names=input_names,
-                    output_names=output_names,
-                    export_params=True,
-                )
+                with io.BytesIO() as f:
+                    torch.onnx.export(self.model, 
+                        torch.tensor(self.img_data).float(),
+                        f,
+                        verbose=False,
+                        input_names=input_names,
+                        output_names=output_names,
+                        export_params=True,
+                    )
+                    f.seek(0)
 
-                onnx_model = onnx.load("tmp.onnx")
+                    onnx_model = onnx.load_model(f, onnx.ModelProto)
                 
                 # convert pytorch model to tvm relay graph
                 # self.mod, self.params = relay.frontend.from_pytorch(jit_model, self.shape_dict)
                 self.mod, self.params = relay.frontend.from_onnx(onnx_model, self.shape_dict)
-                os.remove("tmp.onnx")
 
             elif self.type == 'onnx':
                 onnx_model = onnx.load(self.model_dir)
