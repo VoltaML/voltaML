@@ -10,11 +10,14 @@
   <b> Accelerate your machine learning and deep learning models by upto 10X </b> 
 </p>
 
+<div align="center">
+<a href="https://discord.gg/KsMtUS72"> <img src="https://dcbadge.vercel.app/api/server/KsMtUS72" /> </a> 
+</div>
+
 <hr style="border:0.5px solid gray">
 
 **voltaML** is an open-source lightweight library to accelerate your machine learning and deep learning models. VoltaML can optimize, compile and deploy your models to your target CPU and GPU devices, with just ***one line of code.***
 
-<br>
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/107309002/196096583-2072c64b-67de-44c9-8715-f2746db1de19.gif" alt="animated" />
