@@ -14,7 +14,12 @@
 <a href="https://discord.gg/pY5SVyHmWm"> <img src="https://dcbadge.vercel.app/api/server/pY5SVyHmWm" /> </a> 
 </div>
 
-<hr style="border:0.5px solid gray">
+<div align="center">
+
+### **🔥UPDATE: Stable-Diffusion/DreamBooth Acceleration coming soon. Upto 2.5X speed up in inference🔥**
+</div>
+
+<p style="text-align: center;"> </p>
 
 **voltaML** is an open-source lightweight library to accelerate your machine learning and deep learning models. VoltaML can optimize, compile and deploy your models to your target CPU and GPU devices, with just ***one line of code.***
 
