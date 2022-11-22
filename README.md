@@ -11,7 +11,7 @@
 </p>
 
 <div align="center">
-<a href="https://discord.gg/PSg4fb3Z"> <img src="https://dcbadge.vercel.app/api/server/KsMtUS72" /> </a> 
+<a href="https://discord.gg/pY5SVyHmWm"> <img src="https://dcbadge.vercel.app/api/server/pY5SVyHmWm" /> </a> 
 </div>
 
 <hr style="border:0.5px solid gray">
