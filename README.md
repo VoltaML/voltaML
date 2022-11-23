@@ -16,7 +16,7 @@
 
 <div align="center">
 
-### **🔥UPDATE: Stable-Diffusion/DreamBooth Acceleration coming soon. Upto 2.5X speed up in inference🔥**
+### **🔥UPDATE: [Stable-Diffusion/DreamBooth Acceleration](https://github.com/VoltaML/voltaML-fast-stable-diffusion). Upto 2.5X speed up in inference🔥**
 </div>
 
 <p style="text-align: center;"> </p>
