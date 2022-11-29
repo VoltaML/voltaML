@@ -13,3 +13,4 @@ onnx
 onnxoptimizer
 tqdm
 time
+onnxruntime
